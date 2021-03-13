@@ -1,0 +1,109 @@
+body {
+		font-family: Arial, sans-serif;
+		font-size: 13px;
+		font-style: normal;
+		font-weight: 400;
+		color: rgb(43, 43, 43);
+}
+
+table.tournamentTable {
+	border: 0;
+	width : 3885px;
+	border-spacing: 0;
+	border-collapse: collapse;
+	display: none;
+}
+
+
+table,
+td,
+tr {
+		font-family: Arial, sans-serif;
+		font-size: 13px;
+		font-style: normal;
+		font-weight: 400;
+		color: rgb(43, 43, 43);
+		text-align: left;
+}
+
+td {padding: 0; /*outline: 1px solid black*/}
+
+tfoot td, thead td {
+	text-align: center;
+}
+
+tfoot tr{
+	height: 50px;
+}
+
+.startScreen > div {
+	display: inline-block;
+}
+
+.control-panel-top {
+	vertical-align: top;
+	margin-left: 30px;
+}
+
+.r-final-2-hidden{
+	visibility: hidden;
+}
+
+.current-btn {outline : 2px solid green}
+
+.memberCell {width: 295px;}
+.winner {width: 150px;}
+.lcentercell {
+		background: url(../images/lcenter.png);
+		width: 13px;
+		height: 22px;
+}
+.trcornercell {
+		background: url(../images/trcorner.png);
+		width: 13px;
+		height: 22px;
+}
+.brcornercell {
+		background: url(../images/brcorner.png);
+		width: 13px;
+		height: 22px;
+}
+.lvlinecell {
+		background: url(../images/vline.png);
+		width: 13px;
+		height: 22px
+}
+.rvlinecell {
+		background: url(../images/vline.png);
+		width: 13px;
+		height: 22px
+}
+.voidcell {
+		width: 13px;
+		height: 22px
+}
+.hlinecell {
+		background: url(../images/hline.png);
+		width: 13px;
+		height: 22px
+}
+.bigvlinecell {
+		background: url(../images/bigvline.png);
+		width: 120px;
+		height: 22px
+}
+.tlcornercell {
+		background: url(../images/tlcorner.png);
+		width: 13px;
+		height: 22px
+}
+.blcornercell {
+		background: url(../images/blcorner.png);
+		width: 13px;
+		height: 22px
+}
+.rcentercell {
+		background: url(../images/rcenter.png);
+		width: 13px;
+		height: 22px
+}
