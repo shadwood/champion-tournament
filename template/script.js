@@ -17,17 +17,17 @@ function isSet(variable){
 function sendRequest(dataName, data, dataType = 'POST+JSON') {
     let request = new XMLHttpRequest();
     request.open('POST', 'server.php');
-    if (dataType == 'JSON'){
+    if (dataType === 'JSON'){
         //работает но читать данные можно только из php://input, $_POST приходит пустой, что не очень удобно
         request.setRequestHeader('Content-type', 'application/json; charset=utf-8');
         data = JSON.stringify(data);
     }
-    else if (dataType == 'POST+JSON'){
+    else if (dataType === 'POST+JSON'){
         //поэтому посылаем обычный POST в котором данные в JSON
         request.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
         data = dataName + "=" + JSON.stringify(data);
     }
-    else if (dataType == 'POST'){
+    else if (dataType === 'POST'){
         //посылаем обычный POST
         request.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
         data = dataName + "=" + data;
@@ -119,7 +119,7 @@ function renderingMemberTable(){
 
     }
 
-    if (tournamentMembers.length == 16){
+    if (tournamentMembers.length === 16){
         addButton.setAttribute('disabled', 'disabled');
         memberInput.setAttribute('disabled', 'disabled');
         memberInput.value = "Добавлено 16 участников";
@@ -148,12 +148,12 @@ addButton.addEventListener('click', function(){
 
         let uniqueNick = true;
         if (tournamentMembers.some(function(member){
-            if (member.nick == nick) return true;
+            if (member.nick === nick) return true;
         })) uniqueNick = false;
 
         if (uniqueNick){
             for (let player of db){
-                if (nick == player.nick){
+                if (nick === player.nick){
                     player.warning = 0;
                     tournamentMembers.push(player);
                     break;
@@ -226,7 +226,7 @@ roundNames.forEach(function(roundName){
     if (!tournamentDataInitialized) tournamentData[roundName] = [];
     tournamentInputs[roundName] = _$$(".r-" + roundName + ' input');
     roundButtons[roundName] =  _$('.r-' + roundName + '-btn') ;
-    if (roundName != "16") roundButtons[roundName].setAttribute("disabled", 'disabled');
+    if (roundName !== "16") roundButtons[roundName].setAttribute("disabled", 'disabled');
 });
 
 //одна функция на отрисовка всей таблицы, вызываем каждый раз, когда поменялась дата, перерисовывает все сразу
@@ -291,7 +291,7 @@ startButton.addEventListener('click',function(){
         for (let roundNumber = 0; roundNumber <= lastRoundNumber; roundNumber++){
             nextRoundButtonUnblock(roundNumber);
             previousRoundButtonBlock(roundNumber);
-            if (roundNumber == 11){
+            if (roundNumber === 11){
                 _$$('.r-final-2-hidden').forEach(function(element){
                     element.style.visibility = 'visible';
                 });
@@ -307,7 +307,7 @@ startButton.addEventListener('click',function(){
 
 function nextRoundButtonUnblock(roundNumber){
     let nextRoundNumber = roundNumber + 1;
-    if (roundNames[nextRoundNumber] && roundNames[nextRoundNumber] != "final-2") {
+    if (roundNames[nextRoundNumber] && roundNames[nextRoundNumber] !== "final-2") {
         roundButtons[roundNames[nextRoundNumber]].removeAttribute('disabled');
         roundButtons[roundNames[nextRoundNumber]].classList.add('current-btn');
         roundButtons[roundNames[roundNumber]].classList.remove('current-btn');
@@ -363,7 +363,7 @@ for (let roundNumber = 0; roundNumber < roundNames.length; roundNumber++){
                     fight[key] = roundInputs[j].value;
                     j++;
                 }
-                if (i == numberOfFight[roundNumber]-1){roundFinished = true}
+                if (i === numberOfFight[roundNumber]-1){roundFinished = true}
             }
             else {
                 alert('Тур еще не закончен!!!');
@@ -373,9 +373,9 @@ for (let roundNumber = 0; roundNumber < roundNames.length; roundNumber++){
 
         if (roundFinished) {
             // финальный тур 1 или 2 боя
-            if (roundName == "final" || roundName =="final-2"){
+            if (roundName === "final" || roundName ==="final-2"){
                 let fight = roundData[0];
-                if (roundName == "final"){
+                if (roundName === "final"){
                     if (fight.hitsFrom > fight.hitsTo){
                         _$(".winner-1 input").value = fight.firstOpp;
                         roundButtons['final'].classList.remove('current-btn');
@@ -408,7 +408,7 @@ for (let roundNumber = 0; roundNumber < roundNames.length; roundNumber++){
             else{//все туры кроме финала
 
                 let nextRoundWinData = tournamentData[roundOrder[roundName][0]];
-                if (!(roundName == "8-l-1" || roundName == '4-l-1' || roundName == '2-l-1' || roundName == '2-l-2'))
+                if (!(roundName === "8-l-1" || roundName === '4-l-1' || roundName === '2-l-1' || roundName === '2-l-2'))
                     nextRoundWinData.length = 0;
                 if (nextRoundLose){
                     var nextRoundLoseData = tournamentData[nextRoundLose];
@@ -436,9 +436,9 @@ for (let roundNumber = 0; roundNumber < roundNames.length; roundNumber++){
 
                 //Обработка победителей в верхней и нижней сетках
                 //сначала в в нижней : добавление победителей из этого раунда в уже сформированные бои следующего тура
-                if (roundName == "8-l-1" || roundName == '4-l-1' || roundName == '2-l-1' || roundName == '2-l-2'){
+                if (roundName === "8-l-1" || roundName === '4-l-1' || roundName === '2-l-1' || roundName === '2-l-2'){
                     if (nextRoundWinData[0])
-                        if (roundName == '2-l-2'){//добавление второго участника в финал
+                        if (roundName === '2-l-2'){//добавление второго участника в финал
                             nextRoundWinData[0].secondOpp = winners[0];
                         }
                         else{
@@ -457,7 +457,7 @@ for (let roundNumber = 0; roundNumber < roundNames.length; roundNumber++){
 
                 //создание боев тура нижней сетки, если такой есть у текущего(тур верхней сетки)
                 if (nextRoundLose){
-                    if (nextRoundLose == "8-l-1"){
+                    if (nextRoundLose === "8-l-1"){
                         for (let i = 0; i < losers.length; i += 2){
                             nextRoundLoseData.unshift(new Fight( losers[i], losers[i+1]));
                         }
