@@ -47,7 +47,8 @@
         </datalist>
 
         <script>
-            let tournamentMembers, tournamentData, lastRoundNumber;
+            let tournamentMembers, tournamentData,  warnings;
+            let lastRoundNumber = 0;
         <? if (isset($_SESSION['memberData'])) { ?>
             tournamentMembers = JSON.parse('<?=$_SESSION['memberData']?>');
         <? } ?>
@@ -56,6 +57,9 @@
         <? } ?>
         <? if (isset($_SESSION['lastRoundNumber'])) { ?>
             lastRoundNumber = <?=$_SESSION['lastRoundNumber']?>;
+        <? } ?>
+        <? if (isset($_SESSION['warnings'])) { ?>
+            warnings = <?=$_SESSION['warnings']?>;
         <? } ?>
         </script>
         <script src = "template/db.js"></script>

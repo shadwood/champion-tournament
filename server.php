@@ -13,9 +13,14 @@
         $_SESSION['lastRoundNumber'] = $_POST['lastRoundNumber'];
     }
 
+    if ($_POST['warnings']){
+        $_SESSION['warnings'] = $_POST['warnings'];
+    }
+
     if ($_POST['resetTournamentData']){
        unset($_SESSION['tournamentData']) ;
        unset($_SESSION['lastRoundNumber']) ;
+       unset($_SESSION['warnings']) ;
     }
 
     if ($_POST['resetSession']){

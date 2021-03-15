@@ -47,8 +47,8 @@ function Fight(FirstOpp = "firstOpp",
                SecondOpp = "secondOpp",
                HitsFrom = 1,
                HitsTo = 0,
-               Warning = 0,
-               WarningOpp = 0)
+               Warning = "",
+               WarningOpp = "")
 {
     this.firstOpp = FirstOpp;
     this.hitsFrom = HitsFrom;
@@ -219,15 +219,54 @@ let numberOfFight =  [
 let tournamentInputs = {};
 let roundButtons = {};
 let tournamentDataInitialized = isSet(tournamentData);
-if (!tournamentDataInitialized) {tournamentData = {};}
+if (!tournamentDataInitialized) {
+    tournamentData = {};
+}
+if (!warnings) {
+    warnings = {};
+    tournamentMembers.forEach( function(member){
+        warnings[member.nick] = 0;
+    })
+}
 
-// createArrayOfInputsButtonsAndData инициализируем таблицу данных, собираем кнопки и инпуты
+function addEventOnWarningInput(roundName, n){
+    tournamentInputs[roundName][n].addEventListener("focus", function(){
+        tournamentInputs[roundName][n].setAttribute('data', tournamentInputs[roundName][n].value)
+    });
+    tournamentInputs[roundName][n].addEventListener("change", function(){
+        let memberName = tournamentInputs[roundName][n-2].value;
+        memberName = memberName.includes('(') ? memberName.substr(0, memberName.length-3) : memberName;
+        let change = tournamentInputs[roundName][n].value - tournamentInputs[roundName][n].getAttribute('data');
+        tournamentInputs[roundName][n].setAttribute('data', tournamentInputs[roundName][n].value);
+        warnings[memberName] += change;
+        sendRequest('warnings', warnings);
+        let numberOfFight;
+        let property;
+        if (n % 2) {
+            numberOfFight = ((n+1)/6)-1;
+            property = 'warningOpp';
+        }
+        else{
+            numberOfFight = (n-2)/6;
+            property = 'warning';
+        }
+        tournamentData[roundName][numberOfFight][property] = tournamentInputs[roundName][n].value;
+        renderingTournamentTable();
+    });
+}
+
+// createArrayOfInputsButtonsAndData инициализируем таблицу данных, собираем кнопки, инпуты и вешаем обработчики предупреждений
 roundNames.forEach(function(roundName){
     if (!tournamentDataInitialized) tournamentData[roundName] = [];
     tournamentInputs[roundName] = _$$(".r-" + roundName + ' input');
+    for (let i = 0; i < tournamentInputs[roundName].length; i +=6 ){
+        addEventOnWarningInput(roundName, i+2);
+        addEventOnWarningInput(roundName, i+5);
+    }
     roundButtons[roundName] =  _$('.r-' + roundName + '-btn') ;
     if (roundName !== "16") roundButtons[roundName].setAttribute("disabled", 'disabled');
 });
+
 
 //одна функция на отрисовка всей таблицы, вызываем каждый раз, когда поменялась дата, перерисовывает все сразу
 function renderingTournamentTable(){
@@ -247,6 +286,10 @@ function renderingTournamentTable(){
                tournamentData[roundName].forEach(function(fight){
                    for (let key in fight){
                        tournamentInputs[roundName][j].value = fight[key];
+                       if (/*(i > lastRoundNumber) && */warnings[fight[key]])
+                       {
+                           tournamentInputs[roundName][j].value += "(" + warnings[fight[key]] + ")";
+                       }
                        j++;
                    }
                })
@@ -360,7 +403,11 @@ for (let roundNumber = 0; roundNumber < roundNames.length; roundNumber++){
             let fight =  roundData[i];
             if(roundInputs[j+1].value != 0 || roundInputs[j+4].value != 0){
                 for (let key in fight){
-                    fight[key] = roundInputs[j].value;
+                    if (roundInputs[j].value.includes('(')){
+                        fight[key] =  roundInputs[j].value.substr(0, roundInputs[j].value.length-3)
+                    } else {
+                        fight[key] = roundInputs[j].value;
+                    }
                     j++;
                 }
                 if (i === numberOfFight[roundNumber]-1){roundFinished = true}
@@ -474,6 +521,7 @@ for (let roundNumber = 0; roundNumber < roundNames.length; roundNumber++){
 
             sendRequest('tournamentData', tournamentData);
             sendRequest('lastRoundNumber', roundNumber, "POST");
+            if (lastRoundNumber < roundNumber) {lastRoundNumber = roundNumber}
 
             renderingTournamentTable();
 
