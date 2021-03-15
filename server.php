@@ -6,8 +6,21 @@
     }
 
     if ($_POST['tournamentData']){
-        $_SESSION['tournamentData'] = $_POST['tournamentData'];
+        $tournamentData = json_decode($_POST['tournamentData']);
+
+        foreach ($tournamentData as &$tour){
+            foreach ($tour as &$fight){
+                foreach ($fight as &$property){
+                    $property = htmlspecialchars($property);
+                }
+            }
+        }
+
+        $_SESSION['tournamentData'] = json_encode($tournamentData);
+
+        /*$_SESSION['tournamentData'] = $_POST['tournamentData'];*/
     }
+
 
     if ($_POST['lastRoundNumber']){
         $_SESSION['lastRoundNumber'] = $_POST['lastRoundNumber'];

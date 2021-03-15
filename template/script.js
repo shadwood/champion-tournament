@@ -6,10 +6,6 @@ function _$$(string){
     return document.querySelectorAll(string);
 }
 
-function isObject(variable){
-    return typeof variable === 'object' && variable !== null
-}
-
 function isSet(variable){
     return typeof variable !== 'undefined' && variable !== null
 }
@@ -32,7 +28,7 @@ function sendRequest(dataName, data, dataType = 'POST+JSON') {
         request.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
         data = dataName + "=" + data;
     }
-    else {return}
+    else {return new Error('Неизветсный тип запроса')}
 
     request.send(data);
 
@@ -51,10 +47,12 @@ function Fight(FirstOpp = "firstOpp",
                WarningOpp = "")
 {
     this.firstOpp = FirstOpp;
-    this.hitsFrom = HitsFrom;
+    if (SecondOpp === "Бай") this.hitsFrom = 3;
+    else this.hitsFrom = HitsFrom;
     this.warning = Warning;
     this.secondOpp = SecondOpp;
-    this.hitsTo = HitsTo;
+    if (FirstOpp === "Бай" && SecondOpp !== "Бай") this.hitsTo = 3;
+    else this.hitsTo = HitsTo;
     this.warningOpp = WarningOpp;
 }
 
@@ -73,8 +71,8 @@ let tableBody = _$('.member-table > tbody');
 let startButton = _$('.startButton');
 let bayAddButton = _$('.bay-add-btn');
 
-//if (!isSet(tournamentMembers))  tournamentMembers = [];
-if (!isSet(tournamentMembers)) tournamentMembers = [{"id":"297","nick":"Абигор","rating":"1569","warning":0},{"id":"239","nick":"Август","rating":"1546","warning":0},{"id":"1","nick":"Агнарр","rating":"1649","warning":0},{"id":"216","nick":"Айвен","rating":"1548","warning":0},{"id":"254","nick":"Айдзен","rating":"1593","warning":0},{"id":"317","nick":"Айлин","rating":"1517","warning":0},{"id":"323","nick":"Айлиэ","rating":"1572","warning":0},{"id":"2","nick":"Айона","rating":"1506","warning":0},{"id":"172","nick":"Акир","rating":"1538","warning":0},{"id":"255","nick":"Аксинья","rating":"1565","warning":0},{"id":"265","nick":"Александров Илья","rating":"1640","warning":0},{"id":"178","nick":"Алу","rating":"1569","warning":0},{"id":"345","nick":"Аль-Шурай Александр","rating":"1646","warning":0},{"id":"415","nick":"Амаллир","rating":"1609","warning":0},{"id":"193","nick":"Андерсон","rating":"1645","warning":0},{"id":"11","nick":"Блади","rating":"1769","warning":0}];
+if (!isSet(tournamentMembers))  tournamentMembers = [];
+//if (!isSet(tournamentMembers)) tournamentMembers = [{"id":"297","nick":"Абигор","rating":"1569","warning":0},{"id":"239","nick":"Август","rating":"1546","warning":0},{"id":"1","nick":"Агнарр","rating":"1649","warning":0},{"id":"216","nick":"Айвен","rating":"1548","warning":0},{"id":"254","nick":"Айдзен","rating":"1593","warning":0},{"id":"317","nick":"Айлин","rating":"1517","warning":0},{"id":"323","nick":"Айлиэ","rating":"1572","warning":0},{"id":"2","nick":"Айона","rating":"1506","warning":0},{"id":"172","nick":"Акир","rating":"1538","warning":0},{"id":"255","nick":"Аксинья","rating":"1565","warning":0},{"id":"265","nick":"Александров Илья","rating":"1640","warning":0},{"id":"178","nick":"Алу","rating":"1569","warning":0},{"id":"345","nick":"Аль-Шурай Александр","rating":"1646","warning":0},{"id":"415","nick":"Амаллир","rating":"1609","warning":0},{"id":"193","nick":"Андерсон","rating":"1645","warning":0},{"id":"11","nick":"Блади","rating":"1769","warning":0}];
 //if (!isSet(tournamentMembers)) {tournamentMembers = [{"id":"297","nick":"1","rating":"1569","warning":0},{"id":"239","nick":"2","rating":"1546","warning":0},{"id":"1","nick":"3","rating":"1649","warning":0},{"id":"216","nick":"4","rating":"1548","warning":0},{"id":"254","nick":"5","rating":"1593","warning":0},{"id":"317","nick":"6","rating":"1517","warning":0},{"id":"323","nick":"7","rating":"1572","warning":0},{"id":"2","nick":"8","rating":"1506","warning":0},{"id":"172","nick":"9","rating":"1538","warning":0},{"id":"255","nick":"10","rating":"1565","warning":0},{"id":"265","nick":"11","rating":"1640","warning":0},{"id":"178","nick":"12","rating":"1569","warning":0},{"id":"345","nick":"13","rating":"1646","warning":0},{"id":"415","nick":"14","rating":"1609","warning":0},{"id":"193","nick":"15","rating":"1645","warning":0},{"id":"11","nick":"16","rating":"1769","warning":0}];}
 else {renderingMemberTable();}
 
@@ -103,6 +101,9 @@ function renderingMemberTable(){
         delButton.setAttribute("data", numberOfMember-1);
         delButton.onclick = function(){
             tournamentMembers.splice(this.getAttribute('data'),1);
+            if (tournamentMembers.length < 9){
+                _$('.bay-add-btn').setAttribute("disabled", "disabled");
+            }
             renderingMemberTable();
         };
 
@@ -163,7 +164,14 @@ addButton.addEventListener('click', function(){
         else{
             memberInput.value = '';
         }
+
+
     }
+
+    if (tournamentMembers.length >= 9){
+        _$('.bay-add-btn').removeAttribute("disabled");
+    }
+
     renderingMemberTable();
 });
 
@@ -222,12 +230,7 @@ let tournamentDataInitialized = isSet(tournamentData);
 if (!tournamentDataInitialized) {
     tournamentData = {};
 }
-if (!warnings) {
-    warnings = {};
-    tournamentMembers.forEach( function(member){
-        warnings[member.nick] = 0;
-    })
-}
+
 
 function addEventOnWarningInput(roundName, n){
     tournamentInputs[roundName][n].addEventListener("focus", function(){
@@ -343,6 +346,13 @@ startButton.addEventListener('click',function(){
                 roundButtons['final'].classList.remove('current-btn');
             }
         }
+    }
+
+    if (!warnings) {
+        warnings = {};
+        tournamentMembers.forEach( function(member){
+            warnings[member.nick] = 0;
+        })
     }
 
     renderingTournamentTable();

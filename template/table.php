@@ -9,6 +9,7 @@
         <div class="startScreen">
             <div>
                 <div class="add-member-form">
+                    <p>Внесите не менее 9 бойцов в таблицу</p>
                     <p><input list="members" type="text"></p>
                     <p>
                         <button>Добавить</button>
@@ -17,7 +18,7 @@
 
                 <div>
                     <p>
-                        <button class="bay-add-btn">Добавить бои бай</button>
+                        <button class="bay-add-btn" disabled>Добавить бои бай</button>
                     </p>
                 </div>
 
