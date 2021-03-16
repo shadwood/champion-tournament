@@ -10,9 +10,9 @@ function isSet(variable){
     return typeof variable !== 'undefined' && variable !== null
 }
 
-function sendRequest(dataName, data, dataType = 'POST+JSON') {
+function sendRequest(dataName, data, dataType = 'POST+JSON'/*, getResponse = false, async = true*/) {
     let request = new XMLHttpRequest();
-    request.open('POST', 'server.php');
+    request.open('POST', 'server.php'/*, async*/);
     if (dataType === 'JSON'){
         //работает но читать данные можно только из php://input, $_POST приходит пустой, что не очень удобно
         request.setRequestHeader('Content-type', 'application/json; charset=utf-8');
@@ -32,11 +32,11 @@ function sendRequest(dataName, data, dataType = 'POST+JSON') {
 
     request.send(data);
 
-    /*request.onload = function(){
-        console.log(request.statusText);
-        console.log(request.responseText);
-        console.log(data);
-    }*/
+    /* if (getResponse){
+         //request.responseType = 'json';
+         db = JSON.parse(request.response);
+     }*/
+
 }
 
 function Fight(FirstOpp = "firstOpp",
@@ -86,8 +86,8 @@ function renderingMemberTable(){
         tr.remove();
     });
 
-    //tournamentMembers.sort((a, b) => a.nick > b.nick ? 1 : -1);
-    tournamentMembers.sort((a,b) => +a.rating < +b.rating ? 1 : -1);
+    tournamentMembers.sort((a, b) => a.nick > b.nick ? 1 : -1);
+    //tournamentMembers.sort((a,b) => +a.rating < +b.rating ? 1 : -1);
     //tournamentMembers.sort((a, b) => +a.nick > +b.nick ? 1 : -1);
 
     let numberOfMember = 1;

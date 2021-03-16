@@ -28,7 +28,7 @@
         }
 
         mysqli_free_result($result);
-        mysqli_close($link);
+
 
         if ($auth == false){
             header('WWW-Authenticate: Basic realm="Champion page"');
@@ -37,6 +37,21 @@
         }
         else
         {
+            if (!$_SESSION['DB'][0]){
+                $query = "SELECT id,nick,rating from srt_stat";
+                $result = mysqli_query($link, $query);
+                $db = [];
+
+                while ($member = mysqli_fetch_object($result))
+                {
+                    $db[] = $member;
+                }
+
+                $db = json_encode($db);
+                $_SESSION['DB'] = $db;
+            }
             require_once ('template/table.php');
         }
+
+        mysqli_close($link);
     }

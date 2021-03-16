@@ -1,6 +1,22 @@
 <?php
     session_start();
 
+    /*if ($_POST['getDB']){
+        require_once('db.php');
+        $query = "SELECT id,nick,rating from srt_stat";
+        $result = mysqli_query($link, $query);
+        $db = [];
+        while ($member = mysqli_fetch_object($result))
+        {
+            $db[] = $member;
+        }
+
+        header('Content-Type: application/json');
+        $db = json_encode($db);
+        $_SESSION['DB'] = $db;
+        echo $db;
+    }*/
+
     if ($_POST['memberData']){
         $_SESSION['memberData'] = $_POST['memberData'];
     }

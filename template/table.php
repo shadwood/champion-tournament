@@ -50,6 +50,8 @@
         <script>
             let tournamentMembers, tournamentData,  warnings;
             let lastRoundNumber = 0;
+            let db = <?=$_SESSION['DB']?>;
+
         <? if (isset($_SESSION['memberData'])) { ?>
             tournamentMembers = JSON.parse('<?=$_SESSION['memberData']?>');
         <? } ?>
@@ -62,8 +64,10 @@
         <? if (isset($_SESSION['warnings'])) { ?>
             warnings = <?=$_SESSION['warnings']?>;
         <? } ?>
+
+
         </script>
-        <script src = "template/db.js"></script>
+        <!--<script src = "template/db.js"></script>-->
         <script src = "template/script.js"></script>
     </body>
 </html>
